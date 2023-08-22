@@ -31,6 +31,7 @@ suspend fun BaseItemDto.toFindroidItem(
         BaseItemKind.SEASON -> toFindroidSeason()
         BaseItemKind.SERIES -> toFindroidShow()
         BaseItemKind.BOX_SET -> toFindroidBoxSet()
+        BaseItemKind.FOLDER -> toFindroidFolder()
         else -> null
     }
 }

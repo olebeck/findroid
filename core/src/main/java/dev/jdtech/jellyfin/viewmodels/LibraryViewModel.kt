@@ -56,7 +56,7 @@ constructor(
                 val items = jellyfinRepository.getItemsPaging(
                     parentId = parentId,
                     includeTypes = itemType,
-                    recursive = true,
+                    recursive = libraryType != CollectionType.Unknown, // don't query recursive for folders
                     sortBy = sortBy,
                     sortOrder = sortOrder,
                 ).cachedIn(viewModelScope)
