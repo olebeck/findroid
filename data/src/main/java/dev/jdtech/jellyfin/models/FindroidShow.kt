@@ -4,6 +4,7 @@ import dev.jdtech.jellyfin.database.ServerDatabaseDao
 import org.jellyfin.sdk.model.DateTime
 import org.jellyfin.sdk.model.api.BaseItemDto
 import org.jellyfin.sdk.model.api.BaseItemPerson
+import org.jellyfin.sdk.model.api.ImageType
 import org.jellyfin.sdk.model.api.PlayAccess
 import java.util.UUID
 
@@ -29,6 +30,8 @@ data class FindroidShow(
     val productionYear: Int?,
     val endDate: DateTime?,
     val trailer: String?,
+    override val imageTags: Map<ImageType, String>?,
+    override val imageBlurHashes: Map<ImageType, Map<String, String>>?,
 ) : FindroidItem
 
 fun BaseItemDto.toFindroidShow(): FindroidShow {
@@ -53,6 +56,8 @@ fun BaseItemDto.toFindroidShow(): FindroidShow {
         productionYear = productionYear,
         endDate = endDate,
         trailer = remoteTrailers?.getOrNull(0)?.url,
+        imageTags = imageTags,
+        imageBlurHashes = imageBlurHashes,
     )
 }
 
@@ -79,5 +84,7 @@ fun FindroidShowDto.toFindroidShow(database: ServerDatabaseDao, userId: UUID): F
         productionYear = productionYear,
         endDate = endDate,
         trailer = null,
+        imageTags = null,
+        imageBlurHashes = null,
     )
 }

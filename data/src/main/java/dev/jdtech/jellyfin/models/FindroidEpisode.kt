@@ -4,6 +4,7 @@ import dev.jdtech.jellyfin.database.ServerDatabaseDao
 import dev.jdtech.jellyfin.repository.JellyfinRepository
 import org.jellyfin.sdk.model.DateTime
 import org.jellyfin.sdk.model.api.BaseItemDto
+import org.jellyfin.sdk.model.api.ImageType
 import org.jellyfin.sdk.model.api.LocationType
 import org.jellyfin.sdk.model.api.PlayAccess
 import java.util.UUID
@@ -30,6 +31,8 @@ data class FindroidEpisode(
     val communityRating: Float?,
     override val unplayedItemCount: Int? = null,
     val missing: Boolean = false,
+    override val imageTags: Map<ImageType, String>?,
+    override val imageBlurHashes: Map<ImageType, Map<String, String>>?,
 ) : FindroidItem, FindroidSources
 
 suspend fun BaseItemDto.toFindroidEpisode(
@@ -63,6 +66,8 @@ suspend fun BaseItemDto.toFindroidEpisode(
             seasonId = seasonId!!,
             communityRating = communityRating,
             missing = locationType == LocationType.VIRTUAL,
+            imageTags = imageTags,
+            imageBlurHashes = imageBlurHashes,
         )
     } catch (_: NullPointerException) {
         null
@@ -91,5 +96,7 @@ fun FindroidEpisodeDto.toFindroidEpisode(database: ServerDatabaseDao, userId: UU
         seriesId = seriesId,
         seasonId = seasonId,
         communityRating = communityRating,
+        imageTags = null,
+        imageBlurHashes = null,
     )
 }

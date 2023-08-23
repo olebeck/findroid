@@ -2,6 +2,7 @@ package dev.jdtech.jellyfin.models
 
 import dev.jdtech.jellyfin.database.ServerDatabaseDao
 import org.jellyfin.sdk.model.api.BaseItemDto
+import org.jellyfin.sdk.model.api.ImageType
 import org.jellyfin.sdk.model.api.PlayAccess
 import java.util.UUID
 
@@ -18,6 +19,8 @@ data class FindroidFolder(
     override val runtimeTicks: Long = 0L,
     override val playbackPositionTicks: Long = 0L,
     override val unplayedItemCount: Int?,
+    override val imageTags: Map<ImageType, String>?,
+    override val imageBlurHashes: Map<ImageType, Map<String, String>>?,
 ) : FindroidItem
 
 fun BaseItemDto.toFindroidFolder(): FindroidFolder {
@@ -32,5 +35,7 @@ fun BaseItemDto.toFindroidFolder(): FindroidFolder {
         canDownload = canDownload ?: false,
         unplayedItemCount = userData?.unplayedItemCount,
         sources = emptyList(),
+        imageTags = imageTags,
+        imageBlurHashes = imageBlurHashes,
     )
 }

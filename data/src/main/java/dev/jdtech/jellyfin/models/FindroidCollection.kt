@@ -1,6 +1,7 @@
 package dev.jdtech.jellyfin.models
 
 import org.jellyfin.sdk.model.api.BaseItemDto
+import org.jellyfin.sdk.model.api.ImageType
 import java.util.UUID
 
 data class FindroidCollection(
@@ -17,6 +18,8 @@ data class FindroidCollection(
     override val playbackPositionTicks: Long = 0L,
     override val unplayedItemCount: Int? = null,
     val type: CollectionType,
+    override val imageTags: Map<ImageType, String>?,
+    override val imageBlurHashes: Map<ImageType, Map<String, String>>?,
 ) : FindroidItem
 
 fun BaseItemDto.toFindroidCollection(): FindroidCollection? {
@@ -30,5 +33,7 @@ fun BaseItemDto.toFindroidCollection(): FindroidCollection? {
         id = id,
         name = name.orEmpty(),
         type = type,
+        imageTags = imageTags,
+        imageBlurHashes = imageBlurHashes,
     )
 }

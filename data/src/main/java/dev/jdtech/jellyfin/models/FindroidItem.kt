@@ -4,6 +4,7 @@ import dev.jdtech.jellyfin.database.ServerDatabaseDao
 import dev.jdtech.jellyfin.repository.JellyfinRepository
 import org.jellyfin.sdk.model.api.BaseItemDto
 import org.jellyfin.sdk.model.api.BaseItemKind
+import org.jellyfin.sdk.model.api.ImageType
 import java.util.UUID
 
 interface FindroidItem {
@@ -19,6 +20,8 @@ interface FindroidItem {
     val runtimeTicks: Long
     val playbackPositionTicks: Long
     val unplayedItemCount: Int?
+    val imageTags: Map<ImageType, String>?
+    val imageBlurHashes: Map<ImageType, Map<String, String>>?
 }
 
 suspend fun BaseItemDto.toFindroidItem(

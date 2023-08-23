@@ -5,6 +5,7 @@ import dev.jdtech.jellyfin.repository.JellyfinRepository
 import org.jellyfin.sdk.model.DateTime
 import org.jellyfin.sdk.model.api.BaseItemDto
 import org.jellyfin.sdk.model.api.BaseItemPerson
+import org.jellyfin.sdk.model.api.ImageType
 import org.jellyfin.sdk.model.api.PlayAccess
 import java.util.UUID
 
@@ -30,6 +31,8 @@ data class FindroidMovie(
     val endDate: DateTime?,
     val trailer: String?,
     override val unplayedItemCount: Int? = null,
+    override val imageTags: Map<ImageType, String>?,
+    override val imageBlurHashes: Map<ImageType, Map<String, String>>?,
 ) : FindroidItem, FindroidSources
 
 suspend fun BaseItemDto.toFindroidMovie(
@@ -41,6 +44,13 @@ suspend fun BaseItemDto.toFindroidMovie(
     if (serverDatabase != null) {
         sources.addAll(serverDatabase.getSources(id).map { it.toFindroidSource(serverDatabase) })
     }
+
+    val imageTags2 = mutableMapOf<ImageType, String>()
+    imageTags?.let { imageTags2.putAll(it) }
+    if(!backdropImageTags.isNullOrEmpty()) {
+        backdropImageTags!![0].let { imageTags2.put(ImageType.BACKDROP, it) }
+    }
+
     return FindroidMovie(
         id = id,
         name = name.orEmpty(),
@@ -62,6 +72,8 @@ suspend fun BaseItemDto.toFindroidMovie(
         productionYear = productionYear,
         endDate = endDate,
         trailer = remoteTrailers?.getOrNull(0)?.url,
+        imageTags = imageTags2,
+        imageBlurHashes = imageBlurHashes,
     )
 }
 
@@ -88,5 +100,7 @@ fun FindroidMovieDto.toFindroidMovie(database: ServerDatabaseDao, userId: UUID):
         canPlay = true,
         sources = database.getSources(id).map { it.toFindroidSource(database) },
         trailer = null,
+        imageTags = null,
+        imageBlurHashes = null,
     )
 }
